@@ -13,7 +13,7 @@ void delete_sprite(SpriteRenderer* sprite)
 }
 
 SpriteRenderer::SpriteRenderer()
-    : Graphics()
+    : Graphics<OpenGL::Drawings>()
 {
     // \warning alpha premultiplication needed!!! Otherwise nil alpha will be rendered
     // as white. Remove if not needed!
@@ -54,7 +54,17 @@ SpriteRenderer::~SpriteRenderer()
     glDeleteVertexArrays(1, &quadVAO);
 }
 
-void SpriteRenderer::drawAll(const std::vector<Drawings>& drawingList) noexcept
+void SpriteRenderer::useShader() const noexcept
+{
+    shader->use();
+}
+
+void SpriteRenderer::setTexture(const Texture2D& text) noexcept
+{
+    texture = &const_cast<Texture2D&>(text); // safe only if we don't modify it
+}
+
+void SpriteRenderer::drawAll(const std::vector<OpenGL::Drawings>& drawingList) noexcept
 {
     for (auto& i : drawingList) {
         setTexture(i.texture);
@@ -62,7 +72,7 @@ void SpriteRenderer::drawAll(const std::vector<Drawings>& drawingList) noexcept
     }
 }
 
-void SpriteRenderer::drawSingle(const Drawings& drawing) const noexcept
+void SpriteRenderer::drawSingle(const OpenGL::Drawings& drawing) const noexcept
 {
     // prepare transformations
     shader->use();

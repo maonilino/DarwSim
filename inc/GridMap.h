@@ -4,7 +4,7 @@
 #include "Map.h"
 #include <random>
 #include <exception>
-#include <algorithm>
+#include <map>
 #endif
 
 #ifdef _WIN32
@@ -28,14 +28,14 @@
  *
  * @todo Remove private members documentation from doxyfile in final version
  */
-class GridMap : public Map {
+class GridMap : public Map<glm::vec2> {
   private:
     // Grid is private so that it can only be initialized from within this class. "This
     // is mine and i may change it anytime so you cannot use it"
     struct Grid {
         Grid() = delete;
-        Grid(const Grid&) = delete;
-        Grid& operator=(Grid&) = delete;
+        Grid(const Grid&) = default;
+        Grid& operator=(const Grid&) = default;
         // must provide move constructor and move assign for randomPath function for
         // moving temp grids into vector
         Grid(Grid&&) = default;
@@ -48,6 +48,31 @@ class GridMap : public Map {
 
         uint8_t x = 0;
         uint8_t y = 0;
+
+        bool operator==(const Grid& a) const
+        {
+            if (this->x == a.x && this->y == a.y)
+                return true;
+            else
+                return false;
+        }
+
+        bool operator!=(const Grid& a)
+        {
+            if (this->x != a.x && this->y != a.y)
+                return true;
+            else
+                return false;
+        }
+
+        struct HashFunction {
+            uint16_t operator()(const Grid& pos) const
+            {
+                uint16_t xHash = std::hash<uint16_t>()(pos.x);
+                uint16_t yHash = std::hash<uint16_t>()(pos.y) << 1;
+                return xHash ^ yHash;
+            }
+        };
     };
 
     // use C-style arrays cause we know the size at compile type, it's fixed. Weights
@@ -97,6 +122,14 @@ class GridMap : public Map {
      * all the points
      */
     std::vector<GridMap::Grid> randomPath(const Grid& A, const Grid& B) noexcept;
+    /**
+     * @brief Dijikstra shortest path implementation for finding a random curve/edge
+     * between the two given points
+     *
+     * @return std::vector<GridMap::Grid> Container with the grid coordinates of the
+     * path/curve
+     */
+    std::vector<GridMap::Grid> dsp(Grid& A, Grid& B) noexcept;
     /**
      * @brief Helper function used for filling the trees in the shape
      *

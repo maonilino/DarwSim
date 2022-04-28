@@ -10,16 +10,16 @@
 
 /**
  * @brief
- *
  */
+template<typename coordinate_type>
 class Map {
   public:
     Map(const Map&) = delete;
     Map& operator=(Map&) = delete;
-    Map();
+    Map() = default;
     virtual ~Map() = default;
-
-    virtual std::vector<glm::vec2> generateForrest() noexcept = 0;
+    
+    virtual std::vector<coordinate_type> generateForrest() noexcept = 0;
 
   private:
 };

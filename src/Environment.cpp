@@ -13,10 +13,37 @@ void destroy_environment(Environment* env)
 }
 
 Environment::Environment(const Colour colour)
-    : Simulation()
+    : Simulation<OpenGL::Drawings>()
     , map()
 {
+    winHandle = dlopen("./src/libDarwSimWin.so", RTLD_LAZY);
+    if (!winHandle) {
+        fprintf(stderr, "%s\n", dlerror());
+        exit(EXIT_FAILURE);
+    }
+    createWindow =
+        (Window * (*)(const char* title, const GLint width, const GLint height))
+            dlsym(winHandle, "create_window");
+    deleteWindow = (void (*)(Window*))dlsym(winHandle, "destroy_window");
+
+    graphHandle = dlopen("./src/libDarwSimSprite.so", RTLD_LAZY);
+    if (!graphHandle) {
+        fprintf(stderr, "%s\n", dlerror());
+        exit(EXIT_FAILURE);
+    }
+    createSpriteRenderer =
+        (SpriteRenderer * (*)()) dlsym(graphHandle, "create_sprite");
+    deleteSpriteRenderer =
+        (void (*)(SpriteRenderer*))dlsym(graphHandle, "delete_sprite");
+
+    window = (Window*)createWindow("DarwSim Viewer", WIDTH, HEIGHT);
+    spriteRenderer = (SpriteRenderer*)createSpriteRenderer();
+
     mapHandle = dlopen("libDarwSimMap.so", RTLD_LAZY);
+    if (!mapHandle) {
+        fprintf(stderr, "%s\n", dlerror());
+        exit(EXIT_FAILURE);
+    }
     createMap = (GridMap * (*)()) dlsym(mapHandle, "create_grid_map");
 
     map.reset(createMap());
@@ -25,15 +52,16 @@ Environment::Environment(const Colour colour)
 
     // since this is a temp object, in this case it is an rvalue, thus, we should use
     // move operator to save ressources
-    SpriteRenderer::Drawings background("../annex/Textures/green.jpg", false,
+    mapDrawings.emplace_back("../annex/Textures/map_Texture.jpg", false,
         glm::vec2(0.0f, 0.0f), glm::vec2(WIDTH, HEIGHT));
-    mapDrawings.emplace_back(std::move(background));
 
     configure();
 }
 
 Environment::~Environment()
 {
+    deleteSpriteRenderer(spriteRenderer);
+    deleteWindow(window);
 }
 
 void Environment::runSimulation() noexcept
@@ -60,18 +88,22 @@ void Environment::runSimulation() noexcept
 
 void Environment::configure() noexcept
 {
-    // SpriteRenderer::Drawings testtree(
-    //     "../annex/Textures/tree_1.png", true, glm::vec2(518.0f, 252.0f));
-    // mapDrawings.emplace_back(std::move(testtree));
+    // SpriteRenderer::Drawings testmountain("../annex/Textures/mountains.png", true,
+    //     glm::vec2(418.0f, 252.0f), glm::vec2(350.0f, 340.0f));
+    // mapDrawings.emplace_back(std::move(testmountain));
+
+    std::random_device rd;
+    std::mt19937 mt(rd());
 
     auto forrest = map->generateForrest();
     for (auto& i : forrest) {
-        SpriteRenderer::Drawings tree("../annex/Textures/tree_2.png", true, i);
-        mapDrawings.emplace_back(std::move(tree));
+        std::uniform_int_distribution<uint8_t> dist(1, 3);
+        auto texture = "../annex/Textures/tree_" + std::to_string(dist(mt)) + ".png";
+        mapDrawings.emplace_back(texture.c_str(), true, i);
     }
 }
 
-void Environment::addDrawing(SpriteRenderer::Drawings&& drawing) noexcept
-{
-    mapDrawings.emplace_back(drawing);
-}
+// void Environment::addDrawing(OpenGL::Drawings&& drawing) noexcept
+// {
+//     mapDrawings.emplace_back(drawing);
+// }

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(DarwSim VERSION 0.1.0)
 
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 enable_testing()
@@ -18,6 +18,7 @@ if(UNIX)
     find_package(glm REQUIRED)
     include_directories(./inc "/usr/include")
     add_executable(DarwSim src/glad.c main.cpp)
+    set_property(TARGET DarwSim PROPERTY POSITION_INDEPENDENT_CODE ON)
     target_link_libraries(DarwSim ${OPENGL_LIBRARIES} ${GLM_LIBRARIES} ${CMAKE_DL_LIBS} glfw)
 endif(UNIX)
 

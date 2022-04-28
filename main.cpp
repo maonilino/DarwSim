@@ -4,6 +4,10 @@
 int main(int argc, char const* argv[])
 {
     void* simHandler = dlopen("./src/libDarwSimSim.so", RTLD_LAZY);
+    if (!simHandler) {
+        fprintf(stderr, "%s\n", dlerror());
+        exit(EXIT_FAILURE);
+    }
     /**
      * @todo pass the colour of the env inside this function (for the constructor?).
      * Change pointer type

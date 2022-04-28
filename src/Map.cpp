@@ -1,9 +1,9 @@
 #include "Map.h"
 
-Map::Map()
-{
-}
+// Map::Map()
+// {
+// }
 
-std::vector<glm::vec2> Map::generateForrest() noexcept
-{
-}
+// std::vector<glm::vec2> Map::generateForrest() noexcept
+// {
+// }
