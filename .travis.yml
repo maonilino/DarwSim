@@ -25,4 +25,4 @@ scriupt:
   - export CXX=g++-10
   - cmake --version
   - cmake CMakeLists.txt
-  - cmake  --build . --target master
+  - cmake  --build . --target all
