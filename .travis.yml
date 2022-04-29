@@ -18,6 +18,7 @@ addons:
       - libglew-dev
       - libglfw3-dev
       - libglm-dev
+      - libstb-dev
 
 scriupt:
 # /usr/bin/gcc points to an older compiler on Linux.
