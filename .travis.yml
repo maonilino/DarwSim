@@ -1,15 +1,15 @@
-# blacklist
-branches:
-  except:
-    - legacy
-    - experimental
-    - stagging
+# # blacklist
+# branches:
+#   except:
+#     - legacy
+#     - experimental
+#     - stagging
 
-# whitelist
-branches:
-  only:
-    - master
-    - stable
+# # whitelist
+# branches:
+#   only:
+#     - master
+#     - stable
 
 language: cpp
 dist: focal
