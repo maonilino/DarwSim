@@ -38,7 +38,7 @@ script:
   - export CC=gcc-10
   - export CXX=g++-10
   - cmake --version
-  - mkdir DarwSim && cd DarwSim && cmake ../CMakeLists.txt && cmake --build .. --target all
+  - mkdir bin && cd bin && cmake ../CMakeLists.txt && cmake --build .. --target all
 
 before_deploy:
   - cd ..
