@@ -1,0 +1,28 @@
+language: cpp
+dist: focal
+compiler: gcc
+os: linux
+sudo: true
+env:
+  - BUILD_TYPE=Debug
+
+# default gcc for Ubuntu Focal is v9, upgraded to v10 here
+# It increases build time by ~1 min
+addons:
+  apt:
+    sources:
+      - sourceline: “ppa:ubuntu-toolchain-r/test”
+    packages:
+      - gcc-10
+      - g++-10
+      - libglew-dev
+      - libglfw3-dev
+      - libglm-dev
+
+scriupt:
+# /usr/bin/gcc points to an older compiler on Linux.
+  - export CC=gcc-10
+  - export CXX=g++-10
+  - cmake --version
+  - cmake CMakeLists.txt
+  - cmake  --build . --target master

@@ -43,9 +43,9 @@ Window::Window(const char* TITLE, const GLint Width, const GLint Height)
     glfwMakeContextCurrent(glfwWin);
     glfwSetFramebufferSizeCallback(glfwWin, framebuffer_size_callback);
 
-    // glewExperimental = GL_TRUE;
+    glewExperimental = GL_TRUE;
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (GLEW_OK != glewInit()) {
         // TODO: error reporting
     }
 
