@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/maonilino/DarwSim.svg?branch=master)](https://app.travis-ci.com/maonilino/DarwSim)
+
 DarwSim is a framework whose aim is to simulate a Darwinian evolution of a species in a specific environment. With a predetermined set of problems to be solved, genetic algorithms can be used. The end goal would be to be able to render this evolution process and make the renderer system flexible enough for the user to adapt it to their needs (e.g., the user of this frammework could use a completely different renderer system). This framework is designed following a plugin style architecture (i.e., the interface defines a set of functions that must be supported, and that the user can override).
 
 # Supported features as of now
@@ -6,7 +8,7 @@ Please check the "related pages" category for the todo lists in the current fram
 - [x] Linux Interface
 - [ ] Windows Interface
 - [x] OpenGL renderer
-- [ ] Random environment generator
+- [x] Random environment generator
 - [ ] Prey selection
 - [ ] Random predator generation
 
@@ -17,7 +19,7 @@ Please check the "related pages" category for the list of currently known bugs.
 As of now, the binaries can be found in the build folder of this project. It can be run with the following command, directly from the build directory:<br>  `./DarwSim` <br> 
 Notice that it must be run form the build directory as there are several relative paths for loading the shaders and textures. <br> <br>
 For compiling from source, cmake, opengl, glfw and glm libraries should be installed. Obviously, a recent gnu compiler is also required (any 6+ versions would do). These libraries are included in most linux distributions' package managers. For debian based distros, simply run: <br>
-`sudo apt install libglfw3-dev libglm-dev` <br>
+`sudo apt install libglfw3-dev libglm-dev libglew-dev libglfw3-dev libglm-dev libstb-dev` <br>
 `unzip DarwSim.zip && cd DarwSim` <br>
 `mkdir build && cd build` <br>
 `cmake ..` <br>
