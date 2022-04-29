@@ -45,7 +45,7 @@ script:
 
 before_deploy:
   - cd ..
-  - tar -zcf builds/${TRAVIS_BUILD_DIR}${REPO}-${BUILD_ENV}-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.tar.gz
+  - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}-${BUILD_ENV}-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.tar.gz build annex
 
 deploy:
 # GitHub - Add zip to release
