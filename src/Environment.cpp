@@ -39,7 +39,7 @@ Environment::Environment(const Colour colour)
     window = (Window*)createWindow("DarwSim Viewer", WIDTH, HEIGHT);
     spriteRenderer = (SpriteRenderer*)createSpriteRenderer();
 
-    mapHandle = dlopen("libDarwSimMap.so", RTLD_LAZY);
+    mapHandle = dlopen("./src/libDarwSimMap.so", RTLD_LAZY);
     if (!mapHandle) {
         fprintf(stderr, "%s\n", dlerror());
         exit(EXIT_FAILURE);
