@@ -6,7 +6,7 @@ sudo: true
 # whitelist
 branches:
   only:
-    - /v\d+\.\d+[a-z]/
+    - /^v\d+(\.\d+)+$/
     - master
 
 # default gcc for Ubuntu Focal is v9, upgraded to v10 here
