@@ -6,8 +6,8 @@ sudo: true
 # whitelist
 branches:
   only:
-    - master
     - /v\d+\.\d+[a-z]/
+    - master
 
 # default gcc for Ubuntu Focal is v9, upgraded to v10 here
 # It increases build time by ~1min
@@ -24,12 +24,11 @@ addons:
       - libstb-dev
 
 matrix:
-  include:
-    - os: linux
-      env: BUILD_TYPE=Debug
+  - os: linux
+    env: BUILD_TYPE=Debug
 
-    - os: linux
-      env: BUILD_TYPE=Release
+  - os: linux
+    env: BUILD_TYPE=Release
 
 
 script:
