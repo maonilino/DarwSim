@@ -8,16 +8,23 @@
 language: cpp
 dist: focal
 compiler: gcc
-os: linux
 sudo: true
-env:
-  - BUILD_TYPE=Debug
 
-# # whitelist
-# branches:
-#   only:
-#     - master
-#     - /v\d+\.\d+[a-z]/
+matrix:
+  include:
+    - os: linux
+      env: BUILD_TYPE=Debug
+
+     - os: linux
+      env: BUILD_TYPE=Release
+
+
+# whitelist
+branches:
+  only:
+    - master
+    - dev
+    - /v\d+\.\d+[a-z]/
 
 # default gcc for Ubuntu Focal is v9, upgraded to v10 here
 # It increases build time by ~1 min
