@@ -40,8 +40,8 @@ script:
   - cmake --version
   - mkdir build
   - cd build 
-  - cmake ../CMakeLists.txt
-  - cmake --build .. --target all
+  - cmake ..
+  - make
 
 before_deploy:
   - echo "Deploying build"
