@@ -45,6 +45,7 @@ script:
 
 before_deploy:
   - echo "Deploying build"
+  - cd ..
   - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}-${BUILD_ENV}-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.tar.gz ./build ./annex
 
 deploy:
