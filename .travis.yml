@@ -3,6 +3,12 @@ dist: focal
 compiler: gcc
 sudo: true
 
+# whitelist
+branches:
+  only:
+    - master
+    - /v\d+\.\d+[a-z]/
+
 # default gcc for Ubuntu Focal is v9, upgraded to v10 here
 # It increases build time by ~1min
 addons:
@@ -25,11 +31,6 @@ matrix:
     - os: linux
       env: BUILD_TYPE=Release
 
-# whitelist
-branches:
-  only:
-    - master
-    - /v\d+\.\d+[a-z]/
 
 script:
 # /usr/bin/gcc points to an older compiler on Linux.
