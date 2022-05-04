@@ -22,6 +22,7 @@ addons:
       - libglfw3-dev
       - libglm-dev
       - libstb-dev
+      - jshon # needed for "body"
 
 matrix:
   - os: linux
@@ -42,7 +43,8 @@ script:
   - make
 
 before_deploy:
-  - echo "Deploying build"
+  - echo "Preparing to deploy build"
+  - export BODY=$(jshon -s "$(cat CHANGELOG.md)"))
   - cd ..
   - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}-${BUILD_TYPE}-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.tar.gz ./build ./inc ./annex ./LICENSE.md
 
@@ -56,3 +58,4 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+  body: ${BODY}
