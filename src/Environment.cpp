@@ -88,9 +88,9 @@ void Environment::runSimulation() noexcept
 
 void Environment::configure() noexcept
 {
-    // SpriteRenderer::Drawings testmountain("../annex/Textures/mountains.png", true,
-    //     glm::vec2(418.0f, 252.0f), glm::vec2(350.0f, 340.0f));
-    // mapDrawings.emplace_back(std::move(testmountain));
+    OpenGL::Drawings testmountain("../annex/Textures/mountains.png", true,
+        map->generateMountains(), glm::vec2(252.0f, 224.0f));
+    mapDrawings.emplace_back(std::move(testmountain));
 
     std::random_device rd;
     std::mt19937 mt(rd());

@@ -71,7 +71,7 @@ class SpriteRenderer : public Graphics<OpenGL::Drawings> {
     virtual void useShader() const noexcept;
     /**
      * @brief Sets the texture for the element. Private so to keep encapsulation
-     *@warning this function is called at every frame when we draw all the sprites. If
+     * @warning this function is called at every frame when we draw all the sprites. If
      * we create new textures at every funcyion call it will eat up all the memory and
      * all the cpu
      *

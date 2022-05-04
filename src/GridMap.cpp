@@ -117,7 +117,7 @@ std::vector<GridMap::Grid> GridMap::dsp(Grid& A, Grid& B) noexcept
                     verticesCost[std::move(temp)], std::move(temp))));
             }
         }
-        if (C->second.x < GRID_WEIGHT - 1) {
+        if (C->second.x < GRID_WIDTH - 1) {
             Grid temp(C->second.x + 1, C->second.y);
             if (verticesCost.contains(temp)) {
                 if (verticesCost[std::move(temp)] >
@@ -165,30 +165,35 @@ std::vector<GridMap::Grid> GridMap::dsp(Grid& A, Grid& B) noexcept
                 path.erase(path.begin() + (i - 1));
                 i++;
             }
-            else if ((path[i].x - path[i - 1].x) > 1 || path[i].y - path[i - 1].y > 1) {
+            else if ((path[i].x - path[i - 1].x) > 1 ||
+                     path[i].y - path[i - 1].y > 1) {
                 path.erase(path.begin() + (i - 1));
                 i++;
             }
-            else if ((path[i - 1].x - path[i].x) == 1 && (path[i - 1].y - path[i].y) == 1) {
+            else if ((path[i - 1].x - path[i].x) == 1 &&
+                     (path[i - 1].y - path[i].y) == 1) {
                 path.erase(path.begin() + (i - 1));
                 i++;
             }
-            else if ((path[i].x - path[i - 1].x) == 1 && path[i].y - path[i - 1].y == 1) {
+            else if ((path[i].x - path[i - 1].x) == 1 &&
+                     path[i].y - path[i - 1].y == 1) {
                 path.erase(path.begin() + (i - 1));
                 i++;
             }
-            else if ((path[i].x - path[i - 1].x) == 1 && path[i - 1].y - path[i].y == 1) {
+            else if ((path[i].x - path[i - 1].x) == 1 &&
+                     path[i - 1].y - path[i].y == 1) {
                 path.erase(path.begin() + (i - 1));
                 i++;
             }
-            else if ((path[i - 1].x - path[i].x) == 1 && path[i].y - path[i - 1].y == 1) {
+            else if ((path[i - 1].x - path[i].x) == 1 &&
+                     path[i].y - path[i - 1].y == 1) {
                 path.erase(path.begin() + (i - 1));
                 i++;
             }
-            else if ((path[i - 1].x - path[i].x) == 1 && path[i - 1].y - path[i].y == 1) {
+            else if ((path[i - 1].x - path[i].x) == 1 &&
+                     path[i - 1].y - path[i].y == 1) {
                 path.erase(path.begin() + (i - 1));
                 i++;
-
             }
         }
     }
@@ -225,7 +230,7 @@ void GridMap::fillTrees(
 std::vector<glm::vec2> GridMap::tranformForrest() const noexcept
 {
     std::vector<glm::vec2> forrestCoords;
-    for (auto x = 0; x < GRID_WEIGHT; x++) {
+    for (auto x = 0; x < GRID_WIDTH; x++) {
         for (auto y = 0; y < GRID_HEIGHT; y++) {
             if (fill[x][y]) {
                 forrestCoords.emplace_back(x * gridProjection.x, y * gridProjection.y);
@@ -240,7 +245,7 @@ std::vector<glm::vec2> GridMap::generateForrest() noexcept
     uint8_t offset;
 
     // origin of the "forrest"
-    Grid O(getRandomInt(0, GRID_WEIGHT - 1), getRandomInt(0, GRID_HEIGHT - 1));
+    Grid O(getRandomInt(0, GRID_WIDTH - 1), getRandomInt(0, GRID_HEIGHT - 1));
 
     // get random ofsets used for calculating the 4 random coordinates
     O.y > 0 ? offset = getRandomInt(1, O.y) : offset = 0;
@@ -253,8 +258,8 @@ std::vector<glm::vec2> GridMap::generateForrest() noexcept
                           : offset = 0;
     Grid U(O.x, O.y + offset);
 
-    O.x < GRID_WEIGHT - 1 ? offset = getRandomInt(1, (GRID_WEIGHT - 1) - O.x)
-                          : offset = 0;
+    O.x < GRID_WIDTH - 1 ? offset = getRandomInt(1, (GRID_WIDTH - 1) - O.x)
+                         : offset = 0;
     Grid R(O.x + offset, O.y);
 
     // Creating random forrest shape
@@ -295,4 +300,45 @@ std::vector<glm::vec2> GridMap::generateForrest() noexcept
     auto forrestCoords = tranformForrest();
 
     return forrestCoords;
+}
+
+glm::vec2 GridMap::generateMountains() noexcept
+{
+    // origin of the mountain
+    O = new Grid(getRandomInt(0, GRID_WIDTH - 1), getRandomInt(0, GRID_HEIGHT - 1));
+
+    std::map<IncrementDirection, Grid> dir;
+    while (fill[O->x][O->y]) {
+        if (O->x + 6 < GRID_WIDTH - 1) {
+            O->x++;
+            continue;
+        }
+        if (O->x - 6 > 0) {
+            O->x--;
+            continue;
+        }
+        if (O->y + 4 < GRID_HEIGHT - 1) {
+            O->y++;
+            continue;
+        }
+        if (O->y - 4 > 0) {
+            O->y--;
+            continue;
+        }
+    }
+    // if (O->x + 6 < GRID_WIDTH - 1) 
+    //     dir[IncrementDirection::right] = Grid(O->x + 6, O->y); // right
+    // if (O->x - 6 > 0)
+    //     dir[IncrementDirection::left] = Grid(O->x - 6, O->y); // left
+    // if (O->y + 4 < GRID_HEIGHT - 1)
+    //     dir[IncrementDirection::up] = Grid(O->x, O->y + 4); // up
+    // if (O->y - 4 > 0)
+    //     dir[IncrementDirection::down] = Grid(O->x, O->y - 4); // down
+    
+    
+    // auto right = dir.find(IncrementDirection::right);
+    // auto left = dir.find(IncrementDirection::left);
+    // if (left != dir.end() || right != dir.end()) {}
+
+    return glm::vec2(O->x * gridProjection.x, O->y * gridProjection.y);
 }

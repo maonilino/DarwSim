@@ -14,7 +14,7 @@
  * @brief Environment class used for setting the map style (brown, yellow or green),
  * and randomly generating the terrain
  *
- * @todo Copyrights license
+ * @todo remove redundant dlerror checks
  */
 class Environment : public Simulation<OpenGL::Drawings> {
   public:

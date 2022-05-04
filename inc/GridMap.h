@@ -13,7 +13,7 @@
 
 // Remember to substract 1 as array is 0 based !!!
 // if 22 = Ymax array should have 23 elements (with 0)
-#define GRID_WEIGHT 39
+#define GRID_WIDTH 39
 #define GRID_HEIGHT 23
 
 /**
@@ -30,6 +30,7 @@
  */
 class GridMap : public Map<glm::vec2> {
   private:
+    enum class IncrementDirection {up, down, left, right};
     // Grid is private so that it can only be initialized from within this class. "This
     // is mine and i may change it anytime so you cannot use it"
     struct Grid {
@@ -77,10 +78,10 @@ class GridMap : public Map<glm::vec2> {
 
     // use C-style arrays cause we know the size at compile type, it's fixed. Weights
     // only used for dijkstra algo
-    uint8_t weight[GRID_WEIGHT][GRID_HEIGHT];
+    uint8_t weight[GRID_WIDTH][GRID_HEIGHT];
     // type probably not suitable. Could use a enum to set region to the appropriate
     // type
-    bool fill[GRID_WEIGHT][GRID_HEIGHT] = {false};
+    bool fill[GRID_WIDTH][GRID_HEIGHT] = {false};
 
     Grid gridProjection; // transformation matrix
 
@@ -162,6 +163,8 @@ class GridMap : public Map<glm::vec2> {
      */
     std::vector<glm::vec2> tranformForrest() const noexcept;
 
+    Grid* O;
+
   public:
     GridMap(const GridMap&) = delete;
     GridMap& operator=(GridMap&) = delete;
@@ -169,6 +172,7 @@ class GridMap : public Map<glm::vec2> {
     virtual ~GridMap() = default;
 
     virtual std::vector<glm::vec2> generateForrest() noexcept override;
+    virtual glm::vec2 generateMountains() noexcept override;
 };
 
 extern "C" GridMap* create_grid_map();
