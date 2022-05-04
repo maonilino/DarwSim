@@ -44,9 +44,9 @@ script:
 
 before_deploy:
   - echo "Preparing to deploy build"
+  - cd ..
   - export BODY=$(jshon -s "$(cat CHANGELOG.md)")
   - echo $BODY
-  - cd ..
   - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}-${BUILD_TYPE}-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.tar.gz ./build ./inc ./annex ./LICENSE.md
 
 deploy:
