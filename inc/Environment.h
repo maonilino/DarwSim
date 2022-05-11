@@ -2,7 +2,7 @@
 
 #ifdef unix
 #include "Simulation.h"
-#include "GridMap.h"
+#include "MapGenerator.h"
 #include "SpriteRenderer.h" // mindful of double include (should be ok)
 #endif
 
@@ -11,21 +11,20 @@
 #endif
 
 /**
- * @brief Environment class used for setting the map style (brown, yellow or green),
- * and randomly generating the terrain
+ * @brief Environment class used for setting up the map
+ * @attention users of this framework should use dlsym() to link with their plugin
+ * functions and verify
+
+ * @todo handle shared library with smart pointers at your own risk. On windows, the
+ * heap memory behaves differently between build type
  *
- * @todo remove redundant dlerror checks
  */
 class Environment : public Simulation<OpenGL::Drawings> {
   public:
     Environment(Environment&) = delete;
     Environment& operator=(const Environment&) = delete;
 
-    /**
-     * @brief we don't want a default constructor, as the constructor must be used to
-     * initialize the environment colour (green, brown or yellow)
-     */
-    Environment() = delete;
+    Environment();
     /**
      * @brief Construct a new Environment object and sets the background of the map
      *
@@ -33,7 +32,7 @@ class Environment : public Simulation<OpenGL::Drawings> {
      * @note this class inherits from an abstract class, be mindful of what constructor
      * you need from the base class
      */
-    Environment(const Colour colour);
+    // Environment(const Colour colour);
     virtual ~Environment();
 
     /**
@@ -44,20 +43,13 @@ class Environment : public Simulation<OpenGL::Drawings> {
      * @copydoc Simulation::configure()
      */
     virtual void configure() noexcept override;
-    /**
-     * @copydoc Simulation::addDrawing
-     * @details helper function for adding drawings to be rendered in the simulation.
-     * must give implementation as it is pure virtual. But in the case of opengl as
-     * renderer we can directly call emplace_back() instead.
-     *
-     */
-    // virtual void addDrawing(OpenGL::Drawings&& drawing) noexcept override;
 
   private:
     void* mapHandle;
-    GridMap* (*createMap)();
-    std::unique_ptr<GridMap> map = nullptr;
+    MapGenerator* (*createMap)();
+    std::unique_ptr<MapGenerator> map = nullptr;
 
+    void* winHandle; // Handle for the dynamic shared object (shared lib)
     /**
      * @brief Function pointer for the entry point of the window
      *
@@ -68,23 +60,17 @@ class Environment : public Simulation<OpenGL::Drawings> {
      * @return std::unique_ptr<Window>: unique pointer to the newly created window obj
      */
     Window* (*createWindow)(const char* title, const GLint width, const GLint height);
-    void (*deleteWindow)(Window*);
+    std::unique_ptr<Window> window; // Aggregation relashionship
 
-    void* winHandle;   // Handle for the dynamic shared object (shared lib)
+
     void* graphHandle; // Handle for the dynamic shared object (shared lib)
-
-    SpriteRenderer* spriteRenderer; // Aggregation relashionship
-    Window* window;                 // Aggregation relashionship
-
     /**
      * @brief entry point for the sprite renderer
      * @return pointer to the newly created sprite object on the heap, unique smart
      * pointer
      */
     SpriteRenderer* (*createSpriteRenderer)();
-    void (*deleteSpriteRenderer)(SpriteRenderer*);
+    std::unique_ptr<SpriteRenderer> spriteRenderer; // Aggregation relashionship
 };
 
-extern "C" Environment* create_green_environment();
-
-extern "C" void destroy_environment(Environment*);
+extern "C" Environment* create_environment();

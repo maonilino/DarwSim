@@ -1,6 +1,6 @@
 [![Build Status](https://app.travis-ci.com/maonilino/DarwSim.svg?branch=master)](https://app.travis-ci.com/maonilino/DarwSim)
 
-DarwSim is a framework built using C++20 for my graduation project. The purpose of this project was to learn about Evolutionary computation techniques and review various topics learned during my undergraduate studies. This framework simulates a Darwinian evolution of a species in a specific environment. With a predetermined set of problems to be solved, genetic algorithms can be used. The end goal would be to be able to render this evolution process and make the framework flexible enough for the user to adapt it to their needs (e.g., the user of this frammework could use a completely different renderer system). This framework is designed following a plugin style architecture (i.e., the interface defines a set of functions that must be supported, and that the user can override).
+DarwSim is a framework built using C++20 as part of an academic graduation project. The purpose of this undertaking is to learn and experiment with Evolutionary computation techniques and data-structures algorithms. Through this experiment I expect to review various topics learned during my undergraduate studies. This framework aim’s is to provide a framework with an interface for simulating a Darwinian evolution of a species in its environment. If the species is given a predetermined set of problems to solve, a set of genetic algorithms can be used. Because a proper NP-Hard or NP-Complete problem formulation can be a daunting task to accomplish at an undergraduate level, for this paper, the problem is simply formulated as a simple NP problem such as the shortest path problem, where the goal is to use genetic algorithms to solve it. This framework implements Gen, Cheng, and Wang, ‘Genetic Algorithms for Solving Shortest Path Problems’. The end goal for this framework would be to render this process. In order to make this framework flexible enough for other users to adapt it to their needs (e.g., the user of this framework could use a completely different renderer system). This framework is designed following a plugin style architecture (i.e., the interface defines a set of functions that must be supported, and that the user can override).
 
 # Supported features as of now
 Please check the "related pages" category in the documentations for the todo lists in the current framework state.
@@ -9,8 +9,7 @@ Please check the "related pages" category in the documentations for the todo lis
 - [ ] Windows Interface
 - [x] OpenGL renderer
 - [x] Random environment generator
-- [ ] Prey selection
-- [ ] Random predator generation
+- [x] Gen, Cheng, and Wang, ‘Genetic Algorithms for Solving Shortest Path Problems’ Implementations
 
 # Known issues
 Please check the "related pages" category for the list of currently known bugs.

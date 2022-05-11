@@ -9,18 +9,9 @@ int main(int argc, char const* argv[])
         fprintf(stderr, "%s\n", dlerror());
         exit(EXIT_FAILURE);
     }
-    /**
-     * @todo pass the colour of the env inside this function (for the constructor?).
-     * Change pointer type
-     *
-     */
-    void (*deleteEnvironment)(Environment*);
-    Environment* (*createGreenEnv)();
-    std::unique_ptr<Environment> (*createBrownEnv)();
-    std::unique_ptr<Environment> (*createYellowEnv)();
 
-    deleteEnvironment =
-        (void (*)(Environment*))dlsym(simHandler, "destroy_environment");
+    Environment* (*createEnv)();
+    std::unique_ptr<Environment> env;
 
     std::map<int, std::string> options;
 
@@ -28,13 +19,11 @@ int main(int argc, char const* argv[])
     for (int i = 1; i < argc; ++i)
         options[i] = argv[i];
 
-    Environment* env;
-
 #ifdef unix
-    createGreenEnv =
-        (Environment * (*)()) dlsym(simHandler, "create_green_environment");
-    if (createGreenEnv) { // check whether funuction loaded from shared lib properly
-        env = (Environment*)createGreenEnv();
+    createEnv =
+        (Environment * (*)()) dlsym(simHandler, "create_environment");
+    if (createEnv) { // check whether funuction loaded from shared lib properly
+        env.reset(createEnv());
         env->runSimulation();
     }
 #endif
@@ -47,7 +36,6 @@ int main(int argc, char const* argv[])
     // -----------------------------------------------------------------------------------------
 
     // env->setArguments(options);
-    deleteEnvironment(env);
 
     return 0;
 }

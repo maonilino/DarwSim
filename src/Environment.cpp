@@ -2,17 +2,12 @@
                                  // here before including stb_image!
 #include "Environment.h"
 
-Environment* create_green_environment()
+Environment* create_environment()
 {
-    return new Environment(Colour::green);
+    return new Environment();
 }
 
-void destroy_environment(Environment* env)
-{
-    delete env;
-}
-
-Environment::Environment(const Colour colour)
+Environment::Environment()
     : Simulation<OpenGL::Drawings>()
     , map()
 {
@@ -24,7 +19,6 @@ Environment::Environment(const Colour colour)
     createWindow =
         (Window * (*)(const char* title, const GLint width, const GLint height))
             dlsym(winHandle, "create_window");
-    deleteWindow = (void (*)(Window*))dlsym(winHandle, "destroy_window");
 
     graphHandle = dlopen("./src/libDarwSimSprite.so", RTLD_LAZY);
     if (!graphHandle) {
@@ -33,22 +27,17 @@ Environment::Environment(const Colour colour)
     }
     createSpriteRenderer =
         (SpriteRenderer * (*)()) dlsym(graphHandle, "create_sprite");
-    deleteSpriteRenderer =
-        (void (*)(SpriteRenderer*))dlsym(graphHandle, "delete_sprite");
-
-    window = (Window*)createWindow("DarwSim Viewer", WIDTH, HEIGHT);
-    spriteRenderer = (SpriteRenderer*)createSpriteRenderer();
 
     mapHandle = dlopen("./src/libDarwSimMap.so", RTLD_LAZY);
     if (!mapHandle) {
         fprintf(stderr, "%s\n", dlerror());
         exit(EXIT_FAILURE);
     }
-    createMap = (GridMap * (*)()) dlsym(mapHandle, "create_grid_map");
+    createMap = (MapGenerator * (*)()) dlsym(mapHandle, "create_grid_map");
 
+    window.reset(createWindow("DarwSim Viewer", WIDTH, HEIGHT));
+    spriteRenderer.reset(createSpriteRenderer());
     map.reset(createMap());
-
-    this->colour = colour;
 
     // since this is a temp object, in this case it is an rvalue, thus, we should use
     // move operator to save ressources
@@ -60,8 +49,8 @@ Environment::Environment(const Colour colour)
 
 Environment::~Environment()
 {
-    deleteSpriteRenderer(spriteRenderer);
-    deleteWindow(window);
+    // deleteSpriteRenderer(spriteRenderer);
+    // deleteWindow(window);
 }
 
 void Environment::runSimulation() noexcept
@@ -98,12 +87,9 @@ void Environment::configure() noexcept
     auto forrest = map->generateForrest();
     for (auto& i : forrest) {
         std::uniform_int_distribution<uint8_t> dist(1, 3);
-        auto texture = "../annex/Textures/tree_" + std::to_string(dist(mt)) + ".png";
-        mapDrawings.emplace_back(texture.c_str(), true, i);
+        auto texture = "../annex/Textures/tree_" + std::to_string(dist(mt)) +
+        ".png"; mapDrawings.emplace_back(texture.c_str(), true, i);
     }
-}
 
-// void Environment::addDrawing(OpenGL::Drawings&& drawing) noexcept
-// {
-//     mapDrawings.emplace_back(drawing);
-// }
+    // population.emplace_back(createTrees());
+}
