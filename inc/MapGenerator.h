@@ -71,8 +71,6 @@ class MapGenerator : public Map<glm::vec2>, private GridMapSpecies::Tree, privat
     virtual glm::vec2 generateMountains() noexcept override;
   
   private:
-    void* dsaHandler;
-    void* speciesHandler;
 
 };
 
