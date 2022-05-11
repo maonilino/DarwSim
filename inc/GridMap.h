@@ -14,6 +14,20 @@
 #define GRID_WIDTH  39
 #define GRID_HEIGHT 23
 
+/**
+ * @brief defines the grid style implementation of the map. The grid is used for
+ * knowing how many sprites could be rendered (e.g., one sprite occupies one grid
+ * box). Iy could also be used for determining collisions in a straight forward
+ * manner? This grid maps to window coordinates with the projection/transformation
+ * matrix \f$ \begin{pmatrix}
+ * 21 \\
+ * 28
+ * \end{pmatrix} \f$.
+ * Additionaly, in our implementation, this class also implements the Genetic
+ * algorithm for the "tree species" evolution.
+ *
+ * @todo Remove private members documentation from doxyfile in final version
+ */
 class GridMap {
   public:
     GridMap(const GridMap&) = delete;
@@ -22,8 +36,9 @@ class GridMap {
     virtual ~GridMap() = default;
 
   protected:
-    // Grid is protected so that it can only be initialized from within this class.
-    // "This is mine and i may change it anytime so you cannot use it"
+    // Grid is protected so that it can only be initialized from within this class or
+    // children of this class. "This is mine and i may change it anytime so you cannot
+    // use it"
     struct Grid {
         Grid() = delete;
         Grid(const Grid&) = default;

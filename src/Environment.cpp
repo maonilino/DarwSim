@@ -84,6 +84,8 @@ void Environment::configure() noexcept
     std::random_device rd;
     std::mt19937 mt(rd());
 
+    map->calculateFitness();
+
     auto forrest = map->generateForrest();
     for (auto& i : forrest) {
         std::uniform_int_distribution<uint8_t> dist(1, 3);

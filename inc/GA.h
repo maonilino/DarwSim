@@ -13,6 +13,8 @@
 
 /** @brief This type is the default implementation for the encoding of genes,
  * something like binary string encoding should be implemented here
+ * 
+ * @todo provide default encoding (bit strings) for GA
  */
 
 template <typename Enconding> class GA {

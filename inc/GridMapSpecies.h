@@ -12,14 +12,18 @@
 
 /**
  * @brief Implementation of the tree "species". Only suitable with terrains which
- * relies on 2D Grids (that's why we use pair for the coordinates)
- * The goal of the species is to "survive"/"evolve" here analogical to find the best
- * shape into which it should grow
+ * relies on our grid map implementation(that's why we make a wraper that will inherit
+ * from GridMap, to get access to the protected Grid structure)
  *
+ * @todo provide implementation of the priority based encoding
  */
 struct GridMapSpecies : private GridMap {
+    /**
+     * @brief Wraped tree species. The goal of the species is to "survive"/"evolve"
+     * here analogical to find the best shape into which it should grow
+     *
+     */
     class Tree : public GA<Grid> {
-      private:
       public:
         Tree(Tree&) = delete;
         Tree& operator=(const Tree&) = delete;
@@ -31,11 +35,9 @@ struct GridMapSpecies : private GridMap {
         virtual float calculateFitness() noexcept override;
         virtual void crossover() noexcept override;
     };
-    GridMapSpecies();
+    GridMapSpecies() = default;
     GridMapSpecies(const GridMapSpecies&) = delete;
     GridMapSpecies& operator=(GridMapSpecies&) = delete;
-
-    Tree tree;
 };
 
 extern "C" GridMapSpecies* create_trees();

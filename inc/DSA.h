@@ -11,6 +11,11 @@
 #include <SDL.h> // Or whatever ....
 #endif
 
+/**
+ * @brief Straightforward solutions to shortest path problem using Data structure and
+ * algorithms, and Dijkstra's shortest path algorithm (DSA)
+ *
+ */
 class DSA : protected GridMap {
   public:
     DSA(const DSA&) = delete;

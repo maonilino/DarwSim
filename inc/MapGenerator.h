@@ -14,20 +14,11 @@
 #endif
 
 /**
- * @brief defines the grid style implementation of the map. The grid is used for
- * knowing how many sprites could be rendered (e.g., one sprite occupies one grid
- * box). Iy could also be used for determining collisions in a straight forward
- * manner? This grid maps to window coordinates with the projection/transformation
- * matrix \f$ \begin{pmatrix}
- * 21 \\
- * 28
- * \end{pmatrix} \f$.
- * Additionaly, in our implementation, this class also implements the Genetic
- * algorithm for the "tree species" evolution.
+ * @brief Implementation of the Map interface. Here we generate the terrain/map with
+ * the appropriate settings.
  *
- * @todo Remove private members documentation from doxyfile in final version
  */
-class MapGenerator : public Map<glm::vec2>, private GridMapSpecies::Tree, private DSA {
+class MapGenerator : public Map<glm::vec2>, public GridMapSpecies::Tree, DSA {
   public:
     MapGenerator(const MapGenerator&) = delete;
     MapGenerator& operator=(MapGenerator&) = delete;
@@ -69,9 +60,8 @@ class MapGenerator : public Map<glm::vec2>, private GridMapSpecies::Tree, privat
 
     virtual std::vector<glm::vec2> generateForrest() noexcept override;
     virtual glm::vec2 generateMountains() noexcept override;
-  
-  private:
 
+  private:
 };
 
 extern "C" MapGenerator* create_grid_map();

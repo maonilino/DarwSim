@@ -5,10 +5,10 @@ GridMapSpecies* create_trees()
     return new GridMapSpecies();
 }
 
-GridMapSpecies::GridMapSpecies()
-    : tree()
-{
-}
+// GridMapSpecies::GridMapSpecies()
+//     : tree()
+// {
+// }
 
 GridMapSpecies::Tree::Tree()
 {
