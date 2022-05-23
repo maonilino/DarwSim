@@ -1,11 +1,17 @@
 #include "MapGenerator.h"
 
-MapGenerator* create_grid_map()
+MapGenerator* create_ga_map(const uint16_t populationSize)
+{
+    return new MapGenerator(populationSize);
+}
+
+MapGenerator* create_dsa_map()
 {
     return new MapGenerator();
 }
 
-MapGenerator::MapGenerator()
+MapGenerator::MapGenerator(const uint16_t populationSize)
+    : GridMapSpecies::Tree::Tree(populationSize)
 {
 }
 
@@ -48,7 +54,7 @@ std::vector<glm::vec2> MapGenerator::tranformForrest() const noexcept
     return forrestCoords;
 }
 
-std::vector<glm::vec2> MapGenerator::generateForrest() noexcept
+std::vector<glm::vec2> MapGenerator::generateForrest(Solver selectedSolver) noexcept
 {
     uint8_t offset;
 
@@ -78,7 +84,11 @@ std::vector<glm::vec2> MapGenerator::generateForrest() noexcept
     Grid LD(L.x, D.y);
     // set grid weights, everything arround this square has weights of 255
     assignWeights(O, LD);
-    auto path(dsp(L, D));
+    std::vector<GridMap::Grid> path;
+    if (selectedSolver == Solver::DSA)
+        path = dsp(L, D);
+    else if (selectedSolver == Solver::GA)
+        path = GCW_gasp(L, D);
     // auto path(randomPath(L, D));
     // fill[L->x][L->y] = true;
     // fill[D->x][D->y] = true;
@@ -87,18 +97,21 @@ std::vector<glm::vec2> MapGenerator::generateForrest() noexcept
 
     Grid RU(R.x, U.y);
     assignWeights(RU, O);
-    path = dsp(U, R);
+    if (selectedSolver == Solver::DSA)
+        path = dsp(U, R);
     fillTrees(path, false);
     memset(weight, 0xff, sizeof(weight)); // reset grid weights
 
     assignWeights(R, D);
-    path = dsp(R, D);
+    if (selectedSolver == Solver::DSA)
+        path = dsp(R, D);
     fillTrees(path, true);
     memset(weight, 0xff, sizeof(weight));
     // path = randomPath(R, D);
 
     assignWeights(U, L);
-    path = dsp(U, L);
+    if (selectedSolver == Solver::DSA)
+        path = dsp(U, L);
     fillTrees(path, false);
     memset(weight, 0xff, sizeof(weight));
     // path = randomPath(U, L);

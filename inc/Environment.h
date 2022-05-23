@@ -24,7 +24,8 @@ class Environment : public Simulation<OpenGL::Drawings> {
     Environment(Environment&) = delete;
     Environment& operator=(const Environment&) = delete;
 
-    Environment();
+    Environment() = delete;
+    Environment(std::vector<std::string>& arguments);
     /**
      * @brief Construct a new Environment object and sets the background of the map
      *
@@ -33,7 +34,7 @@ class Environment : public Simulation<OpenGL::Drawings> {
      * you need from the base class
      */
     // Environment(const Colour colour);
-    virtual ~Environment();
+    virtual ~Environment() = default;
 
     /**
      * @copydoc Simulation::runSimulation()
@@ -46,7 +47,8 @@ class Environment : public Simulation<OpenGL::Drawings> {
 
   private:
     void* mapHandle;
-    MapGenerator* (*createMap)();
+    MapGenerator* (*createMapDSA)();
+    MapGenerator* (*createMapGA)(const uint16_t);
     std::unique_ptr<MapGenerator> map = nullptr;
 
     void* winHandle; // Handle for the dynamic shared object (shared lib)
@@ -62,7 +64,6 @@ class Environment : public Simulation<OpenGL::Drawings> {
     Window* (*createWindow)(const char* title, const GLint width, const GLint height);
     std::unique_ptr<Window> window; // Aggregation relashionship
 
-
     void* graphHandle; // Handle for the dynamic shared object (shared lib)
     /**
      * @brief entry point for the sprite renderer
@@ -73,4 +74,9 @@ class Environment : public Simulation<OpenGL::Drawings> {
     std::unique_ptr<SpriteRenderer> spriteRenderer; // Aggregation relashionship
 };
 
-extern "C" Environment* create_environment();
+/**
+ * @brief Entry point of the Simulation implementation for the OpenGL renderer.
+ * @param arguments List of arguments for the application to be run. Here, we could
+ * pass information about the solver to use, or other benchmarking features
+ */
+extern "C" Environment* create_environment(std::vector<std::string>& arguments);

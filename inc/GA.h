@@ -32,12 +32,14 @@ template <typename Enconding> class GA {
      * selecting the individuals
      * @return float The fitnesss value for this phenotype
      */
-    virtual float calculateFitness() noexcept = 0;
-    virtual void selection() noexcept = 0;
+    virtual float calculateFitness() const noexcept = 0;
+    virtual void selection() const noexcept = 0;
     virtual void crossover() noexcept = 0;
+    virtual void mutation() noexcept = 0;
 
   protected:
     std::vector<Enconding> individuals;
+    uint16_t population_size;
 
   private:
 };

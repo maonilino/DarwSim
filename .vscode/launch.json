@@ -29,7 +29,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/DarwSim",
-            "args": ["--colour", "brown"],
+            "args": ["--solver", "GA", "23"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "environment": [],

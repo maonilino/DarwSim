@@ -6,7 +6,12 @@
 // {
 // }
 
-template <typename Encoding> float GA<Encoding>::calculateFitness() noexcept
+// template <typename Encoding> GA<Encoding>::GA(uint16_t popSize)
+//     : population_size(popSize)
+// {
+// }
+
+template <typename Encoding> float GA<Encoding>::calculateFitness() const noexcept
 {
     /**
      * @todo Provide default implementation for binary bit string encoding

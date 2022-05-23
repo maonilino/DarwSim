@@ -2,6 +2,7 @@
 
 #ifdef unix
 #include "Graphics.h"
+#include "Solver.h"
 #endif
 
 #ifdef _WIN32
@@ -23,7 +24,6 @@ template <typename drawing_type> class Simulation {
      * @brief Set the arguments for the simulation
      * @param options array of strings containing arguments
      */
-    // virtual void setArguments(const std::vector<std::string>& options);
 
     // Main simulation loop. Here we run the program.
     virtual void runSimulation() noexcept = 0;
@@ -34,9 +34,10 @@ template <typename drawing_type> class Simulation {
     virtual void configure() noexcept = 0;
 
   private:
-
   protected:
     // array for storing all the drawings for the map. Should be
     // in this class so that we have a single runSimulation fuction
     std::vector<drawing_type> mapDrawings;
+    std::unordered_map<std::string, uint16_t> options;
+    // Solver solver = Solver::DSA; // default solver uses DSA
 };
