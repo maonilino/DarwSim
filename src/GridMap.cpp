@@ -14,6 +14,24 @@ uint8_t GridMap::getRandomInt(uint8_t min, uint8_t max) const noexcept
     return dist(mt);
 }
 
+float GridMap::getRandomFloat(float min, float max) const noexcept
+{
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<float> dist(min, max);
+
+    return dist(mt);
+}
+
+float GridMap::getRandomFloat(uint8_t min, uint32_t max) const noexcept
+{
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<> dist(min, max);
+
+    return dist(mt);
+}
+
 void GridMap::assignWeights(const Grid& A, const Grid& C) noexcept
 {
     for (int16_t i = A.y; i >= C.y; i--) {

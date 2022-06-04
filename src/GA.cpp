@@ -11,13 +11,15 @@
 // {
 // }
 
-template <typename Encoding> float GA<Encoding>::calculateFitness() const noexcept
-{
-    /**
-     * @todo Provide default implementation for binary bit string encoding
-     *
-     */
-    return 0.2f;
-}
+// template <typename Encoding>
+// float GA<Encoding>::calculateFitness(
+//     const uint32_t objective_score, const uint8_t) const noexcept
+// {
+//     /**
+//      * @todo Provide default implementation for binary bit string encoding
+//      *
+//      */
+//     return 0.2f;
+// }
 
 template class GA<std::bitset<32>>;

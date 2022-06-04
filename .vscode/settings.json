@@ -69,7 +69,8 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "unordered_set": "cpp"
     },
     "cmake.configureOnOpen": true
 }

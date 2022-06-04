@@ -23,8 +23,9 @@ class MapGenerator : public Map<glm::vec2>, private GridMapSpecies::Tree, DSA {
     MapGenerator(const MapGenerator&) = delete;
     MapGenerator& operator=(MapGenerator&) = delete;
 
-    MapGenerator() = default;                    // default constructor for dsa solver
-    MapGenerator(const uint16_t populationSize); // custom constructor for ga solver
+    MapGenerator() = default; // default constructor for dsa solver
+    MapGenerator(const uint16_t populationSize,
+        const uint16_t genSize); // custom constructor for ga solver
     virtual ~MapGenerator() = default;
 
     /**
@@ -59,12 +60,12 @@ class MapGenerator : public Map<glm::vec2>, private GridMapSpecies::Tree, DSA {
      */
     std::vector<glm::vec2> tranformForrest() const noexcept;
 
-  /**
-   * @brief 
-   * 
-   * @param selectedSolver solver to be used
-   * @return std::vector<glm::vec2> forest area
-   */
+    /**
+     * @brief
+     *
+     * @param selectedSolver solver to be used
+     * @return std::vector<glm::vec2> forest area
+     */
     virtual std::vector<glm::vec2> generateForrest(
         Solver selectedSolver = Solver::DSA) noexcept override;
     virtual glm::vec2 generateMountains() noexcept override;
@@ -74,4 +75,5 @@ class MapGenerator : public Map<glm::vec2>, private GridMapSpecies::Tree, DSA {
 
 extern "C" MapGenerator* create_dsa_map();
 
-extern "C" MapGenerator* create_ga_map(const uint16_t populationSize);
+extern "C" MapGenerator* create_ga_map(
+    const uint16_t populationSize, const uint16_t genSize);

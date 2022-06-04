@@ -130,6 +130,7 @@ std::vector<GridMap::Grid> DSA::dsp(Grid& A, Grid& B) noexcept
         }
     }
 
+    // do not use forrange loop. UB if so. Because of iterator invalidation
     for (auto i = path.size() - 1; i != 0; i--) {
         if ((i - 1) != 0) {
             if ((path[i - 1].x - path[i].x) > 1 || (path[i - 1].y - path[i].y) > 1) {

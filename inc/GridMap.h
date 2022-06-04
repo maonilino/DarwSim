@@ -3,6 +3,7 @@
 #ifdef unix
 #include <random>
 #include <exception>
+#include <array>
 #endif
 
 #ifdef _WIN32
@@ -61,9 +62,9 @@ class GridMap {
                 return false;
         }
 
-        bool operator!=(const Grid& a)
+        bool operator!=(const Grid& a) const
         {
-            if (this->x != a.x && this->y != a.y)
+            if (this->x != a.x || this->y != a.y)
                 return true;
             else
                 return false;
@@ -84,7 +85,7 @@ class GridMap {
     Grid gridProjection; // transformation matrix
 
     // use C-style arrays cause we know the size at compile type, it's fixed. Weights
-    uint8_t weight[GRID_WIDTH][GRID_HEIGHT];
+    std::array<std::array<uint8_t, GRID_HEIGHT>, GRID_WIDTH> weight;
     // type probably not suitable. Could use a enum to set region to the appropriate
     // type
     bool fill[GRID_WIDTH][GRID_HEIGHT] = {false};
@@ -97,6 +98,8 @@ class GridMap {
      * @return uint8_t random number generated with the entropy of the system
      */
     uint8_t getRandomInt(uint8_t min, uint8_t max) const noexcept;
+    float getRandomFloat(float min, float max) const noexcept;
+    float getRandomFloat(uint8_t min, uint32_t max) const noexcept;
     /**
      * @brief Helper for assigning random weights to the grids in the rectangle formed
      * by the random points. Random weights are used for getting random paths,

@@ -1,7 +1,7 @@
 #define GLEW_STATIC
 #include "Environment.h"
 
-int main(int argc, char const* argv[])
+int main(int argc, char** argv)
 {
     void* simHandler = dlopen("./src/libDarwSimSim.so", RTLD_LAZY);
     if (!simHandler) {
@@ -10,23 +10,22 @@ int main(int argc, char const* argv[])
     }
 
     // \copydoc Environment::create_environment
-    Environment* (*createEnv)(std::vector<std::string> & arguments);
+    Environment* (*createEnv)(int, char**);
     std::unique_ptr<Environment> env;
 
-    std::vector<std::string> options;
-
-    // options.emplace_back(argv[0]);
-
-    // skip the path of the bin, only keep passed args
-    for (int i = 1; i < argc; ++i)
-        options.emplace_back(argv[i]);
-
 #ifdef unix
-    createEnv = (Environment * (*)(std::vector<std::string> & arguments))
+    createEnv = (Environment * (*)(int, char**))
         dlsym(simHandler, "create_environment");
     if (createEnv) { // check whether funuction loaded from shared lib properly
-        env.reset(createEnv(options));
-        env->runSimulation();
+        try
+        {
+            env.reset(createEnv(argc, argv));
+            env->runSimulation();
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
     }
 #endif
 #ifdef _WIN32

@@ -2,41 +2,43 @@
                                  // here before including stb_image!
 #include "Environment.h"
 
-Environment* create_environment(std::vector<std::string>& arguments)
+Environment* create_environment(int argc, char** argv)
 {
-    return new Environment(arguments);
+    return new Environment(argc, argv);
 }
 
-Environment::Environment(std::vector<std::string>& arguments)
+Environment::Environment(int argc, char** argv)
     : Simulation<OpenGL::Drawings>()
     , map()
+    , app{"Welcome to DarwSim", "DarwSim"}
 {
-    bool solver = 0;
-    bool ga = 0;
-    for (auto& i : arguments) {
-        if (i == "--solver") {
-            solver = true;
-            continue;
-        }
-        else if ((i == "dsa" || i == "DSA") && solver)
-            options["solver"] = static_cast<uint8_t>(Solver::DSA);
-        else if ((i == "ga" || i == "GA") && solver) {
-            ga = true;
-            options["solver"] = static_cast<uint8_t>(Solver::GA);
-        }
-        else if (solver && ga) {
-            try {
-                options["population"] = std::stoi(i);
-            }
-            catch (const std::exception& e) {
-                std::string error{
-                    i + ", invalid argument for ga solver. Please specify a numeral"};
-                throw std::invalid_argument(error);
-            }
-        }
-        else if(!solver) {
-            throw std::invalid_argument("Unknown argument: " + i);
-        }
+    uint16_t popSize = 23;
+    uint16_t generations = 43;
+    app.add_option("-s,--solver", solverString,
+           "Solver to be used (DSA or GA). DSA by default")
+        ->default_str("DSA");
+    app.add_flag(
+           "--gen-size", generations, "Number of generations to use. 43 By default")
+        ->expected(1, 999)
+        ->default_val(43);
+    app.add_flag("--pop-size", popSize, "Number of initial populations. 23 by default")
+        ->expected(10, 300)
+        ->default_val(23);
+
+    try {
+        app.parse(argc, argv);
+    }
+    catch (const CLI::ParseError& e) {
+        exit(app.exit(e));
+    }
+
+    if (solverString == "DSA" || solverString == "dsa")
+        solver = Solver::DSA;
+    else if (solverString == "GA" || solverString == "ga")
+        solver = Solver::GA;
+    else {
+        throw std::invalid_argument(
+            "Available solvers: GA, DSA. Solver unknown: " + solverString);
     }
 
     winHandle = dlopen("./src/libDarwSimWin.so", RTLD_LAZY);
@@ -62,25 +64,17 @@ Environment::Environment(std::vector<std::string>& arguments)
         exit(EXIT_FAILURE);
     }
     createMapDSA = (MapGenerator * (*)()) dlsym(mapHandle, "create_dsa_map");
-    createMapGA =
-        (MapGenerator * (*)(const uint16_t)) dlsym(mapHandle, "create_ga_map");
+    createMapGA = (MapGenerator * (*)(const uint16_t, const uint16_t))
+        dlsym(mapHandle, "create_ga_map");
 
     window.reset(createWindow("DarwSim Viewer", WIDTH, HEIGHT));
     spriteRenderer.reset(createSpriteRenderer());
-    if (options.contains("solver")) {
-        if (options["solver"] == static_cast<uint8_t>(Solver::DSA)) {
-            map.reset(createMapDSA());
-        }
-        else if (options["solver"] == static_cast<uint8_t>(Solver::GA)) {
-            if (options.contains("population"))
-                map.reset(createMapGA(options["population"]));
-            else
-                throw std::invalid_argument(
-                    "Population size not specified for the GA solver");
-        }
-    }
-    else
+    if (solver == Solver::DSA) {
         map.reset(createMapDSA());
+    }
+    else if (solver == Solver::GA) {
+        map.reset(createMapGA(popSize, generations));
+    }
 
     // since this is a temp object, in this case it is an rvalue, thus, we should
     // use move operator to save ressources
@@ -127,21 +121,6 @@ void Environment::configure() noexcept
     std::random_device rd;
     std::mt19937 mt(rd());
 
-    Solver solver = Solver::DSA;
-    if (options.contains("solver")) {
-        switch (options["solver"]) {
-        case 0:
-            solver = Solver::DSA;
-            break;
-
-        case 1:
-            solver = Solver::GA;
-            break;
-
-        default:
-            break;
-        }
-    }
     auto forrest = map->generateForrest(solver);
     for (auto& i : forrest) {
         std::uniform_int_distribution<uint8_t> dist(1, 3);

@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef unix
+#include "CLI11.hpp"
 #include "Simulation.h"
 #include "MapGenerator.h"
 #include "SpriteRenderer.h" // mindful of double include (should be ok)
@@ -25,7 +26,7 @@ class Environment : public Simulation<OpenGL::Drawings> {
     Environment& operator=(const Environment&) = delete;
 
     Environment() = delete;
-    Environment(std::vector<std::string>& arguments);
+    Environment(int, char**);
     /**
      * @brief Construct a new Environment object and sets the background of the map
      *
@@ -45,10 +46,12 @@ class Environment : public Simulation<OpenGL::Drawings> {
      */
     virtual void configure() noexcept override;
 
+    CLI::App app; // CLI parser. Public so that it can be accessed in main.
+
   private:
     void* mapHandle;
     MapGenerator* (*createMapDSA)();
-    MapGenerator* (*createMapGA)(const uint16_t);
+    MapGenerator* (*createMapGA)(const uint16_t, const uint16_t);
     std::unique_ptr<MapGenerator> map = nullptr;
 
     void* winHandle; // Handle for the dynamic shared object (shared lib)
@@ -72,6 +75,9 @@ class Environment : public Simulation<OpenGL::Drawings> {
      */
     SpriteRenderer* (*createSpriteRenderer)();
     std::unique_ptr<SpriteRenderer> spriteRenderer; // Aggregation relashionship
+
+    std::string solverString;
+    Solver solver = Solver::DSA;
 };
 
 /**
@@ -79,4 +85,4 @@ class Environment : public Simulation<OpenGL::Drawings> {
  * @param arguments List of arguments for the application to be run. Here, we could
  * pass information about the solver to use, or other benchmarking features
  */
-extern "C" Environment* create_environment(std::vector<std::string>& arguments);
+extern "C" Environment* create_environment(int, char**);

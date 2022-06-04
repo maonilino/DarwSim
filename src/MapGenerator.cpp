@@ -1,8 +1,8 @@
 #include "MapGenerator.h"
 
-MapGenerator* create_ga_map(const uint16_t populationSize)
+MapGenerator* create_ga_map(const uint16_t populationSize, const uint16_t genSize)
 {
-    return new MapGenerator(populationSize);
+    return new MapGenerator(populationSize, genSize);
 }
 
 MapGenerator* create_dsa_map()
@@ -10,8 +10,8 @@ MapGenerator* create_dsa_map()
     return new MapGenerator();
 }
 
-MapGenerator::MapGenerator(const uint16_t populationSize)
-    : GridMapSpecies::Tree::Tree(populationSize)
+MapGenerator::MapGenerator(const uint16_t populationSize, const uint16_t genSize)
+    : GridMapSpecies::Tree::Tree(populationSize, genSize)
 {
 }
 
@@ -77,8 +77,7 @@ std::vector<glm::vec2> MapGenerator::generateForrest(Solver selectedSolver) noex
     Grid R(O.x + offset, O.y);
 
     // Creating random forrest shape
-    memset(weight, 0xff, sizeof(weight));
-    memset(fill, 0, sizeof(fill));
+    memset(&weight[0], 0xff, sizeof(weight[0]) * weight.size());
     fill[O.x][O.y] = true;
 
     Grid LD(L.x, D.y);
@@ -87,33 +86,36 @@ std::vector<glm::vec2> MapGenerator::generateForrest(Solver selectedSolver) noex
     std::vector<GridMap::Grid> path;
     if (selectedSolver == Solver::DSA)
         path = dsp(L, D);
-    else if (selectedSolver == Solver::GA)
-        path = GCW_gasp(L, D);
+    else if (selectedSolver == Solver::GA) {
+        path = GCW_gasp(L, D, weight);
+        auto debug = dsp(L, D);
+        auto fartdebug = 0u;
+    }
     // auto path(randomPath(L, D));
     // fill[L->x][L->y] = true;
     // fill[D->x][D->y] = true;
     fillTrees(path, true);
-    memset(weight, 0xff, sizeof(weight)); // reset grid weights
+    memset(&weight[0], 0xff, sizeof(weight[0]) * weight.size());
 
     Grid RU(R.x, U.y);
     assignWeights(RU, O);
     if (selectedSolver == Solver::DSA)
         path = dsp(U, R);
     fillTrees(path, false);
-    memset(weight, 0xff, sizeof(weight)); // reset grid weights
+    memset(&weight[0], 0xff, sizeof(weight[0]) * weight.size());
 
     assignWeights(R, D);
     if (selectedSolver == Solver::DSA)
         path = dsp(R, D);
     fillTrees(path, true);
-    memset(weight, 0xff, sizeof(weight));
+    memset(&weight[0], 0xff, sizeof(weight[0]) * weight.size());
     // path = randomPath(R, D);
 
     assignWeights(U, L);
     if (selectedSolver == Solver::DSA)
         path = dsp(U, L);
     fillTrees(path, false);
-    memset(weight, 0xff, sizeof(weight));
+    memset(&weight[0], 0xff, sizeof(weight[0]) * weight.size());
     // path = randomPath(U, L);
 
     // fill[U->x][U->y] = true;

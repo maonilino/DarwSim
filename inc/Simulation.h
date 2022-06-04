@@ -38,6 +38,5 @@ template <typename drawing_type> class Simulation {
     // array for storing all the drawings for the map. Should be
     // in this class so that we have a single runSimulation fuction
     std::vector<drawing_type> mapDrawings;
-    std::unordered_map<std::string, uint16_t> options;
     // Solver solver = Solver::DSA; // default solver uses DSA
 };
