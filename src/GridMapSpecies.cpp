@@ -55,7 +55,7 @@ std::vector<GridMap::Grid> GridMapSpecies::Tree::GCW_gasp(const Grid& A, const G
                 pathGridSize = (A.x - B.x) * (A.y - B.y);
                 for (int k = A.x; k >= B.x; k--) {
                     // highest priority to starting & finishing node
-                    if (k == A.x && y == A.y || (k == B.x && y == B.y))
+                    if ((k == A.x && y == A.y) || (k == B.x && y == B.y))
                         individuals[i].emplace(Grid(k, y), 0xff);
                     else
                         individuals[i].emplace(
@@ -121,7 +121,7 @@ std::vector<GridMap::Grid> GridMapSpecies::Tree::GCW_gasp(const Grid& A, const G
             if (!blocked) {
                 pathObj.emplace_back(currNode);
                 scores[indsCount] = objective(pathObj);
-                // reward good individuals ? 
+                // reward good individuals ?
                 // scores[indsCount] -= enclosing->getRandomInt(1, scores[indsCount]);
                 // 3. Convert the objective function's value to fitness
                 fitness[indsCount] = calculateFitness(scores[indsCount], pathGridSize);
@@ -315,23 +315,34 @@ void GridMapSpecies::Tree::mutation() noexcept
 {
     auto rate = 0.2f;
 
-    std::unordered_set<Grid, Grid::HashFunction> to_mutate;
+    std::vector<Grid> to_mutate;
+    to_mutate.reserve(2);
 
     auto chromosome_count = 0u;
     for (auto& chromosome : individuals) {
-        for (auto& locus : chromosome) {
-            auto rand = enclosing->getRandomFloat(0.0f, 1.0f);
+        auto randLocus1 = std::next(
+            chromosome.begin(), enclosing->getRandomInt(0, chromosome.size() - 1));
+        auto randLocus2 = std::next(
+            chromosome.begin(), enclosing->getRandomInt(0, chromosome.size() - 1));
 
+        if (randLocus1 != randLocus2) {
+            auto rand = enclosing->getRandomFloat(0.0f, 1.0f);
             if (rand < rate) {
-                for (auto& i : doNotMutate) {
-                    if (*i != locus.first)
-                        to_mutate.emplace(locus.first);
+                if (*doNotMutate[0] != randLocus1->first ||
+                    *doNotMutate[0] != randLocus2->first ||
+                    *doNotMutate[1] != randLocus1->first ||
+                    *doNotMutate[1] != randLocus2->first) {
+                    to_mutate.emplace_back(randLocus1->first);
+                    to_mutate.emplace_back(randLocus2->first);
                 }
             }
         }
 
-        for (auto& mutated : to_mutate) {
-            individuals[chromosome_count][mutated] = enclosing->getRandomInt(1, 0xfe);
+        if (to_mutate.size() == 2) {
+            auto temp = individuals[chromosome_count][to_mutate[0]];
+            individuals[chromosome_count][to_mutate[0]] =
+                individuals[chromosome_count][to_mutate[1]];
+            individuals[chromosome_count][to_mutate[1]] = temp;
         }
 
         to_mutate.clear();

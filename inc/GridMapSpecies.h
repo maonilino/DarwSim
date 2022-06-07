@@ -34,7 +34,7 @@ struct GridMapSpecies : private GridMap {
         Tree& operator=(const Tree&) = delete;
         Tree(const uint16_t populationSize,
             const uint16_t generations); // Needed for GA solver
-        Tree() = default;                // Only needeed for DSA solver
+        Tree() = default;                // Only needeed for DSA solver. Does nothing
 
         virtual ~Tree() = default;
 

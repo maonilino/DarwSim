@@ -29,7 +29,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/DarwSim",
-            "args": ["--solver", "GA", "--gen-size=2000", "--pop-size=210"],
+            "args": ["--solver", "GA", "--gen-size=1100", "--pop-size=180"],
             // "args": ["--solver", "DSA"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",

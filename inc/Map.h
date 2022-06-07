@@ -25,7 +25,7 @@ template <typename coordinate_type> class Map {
      * @return std::vector<coordinate_type> Vector of coordinate type containing all
      * the coordinates of the forest (of each tree to be placed)
      */
-    virtual std::vector<coordinate_type> generateForrest(Solver selectedSolver) noexcept = 0;
+    virtual std::vector<coordinate_type> generateForrest(Solver selectedSolver) = 0;
     /**
      * @brief Function for generating the mountain(s).
      *

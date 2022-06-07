@@ -1,4 +1,8 @@
 #pragma once
 
-// Currently supported solvers
-enum class Solver { DSA, GA };
+/**
+ * @brief Currently supported solvers. All is for utilizing both solver simultaniously
+ * and comparing the results
+ *
+ */
+enum class Solver { DSA, GA, All };
