@@ -41,7 +41,6 @@ struct GridMapSpecies : private GridMap {
         /**
          * @brief Implements Gen, Cheng, and Wang's (GCW) ‘Genetic Algorithms for
          * Solving Shortest Path Problems’ (GCW_gasp)
-         *
          * @param graph Weighted graph in which we are performing the search
          */
         virtual std::vector<Grid> GCW_gasp(const Grid& A, const Grid& B,
